@@ -6,7 +6,7 @@
         <!-- 此处放入input元素 -->
         <slot></slot>
       </div>
-      <!-- 此处选择性放入一个p元素 -->
+      <!-- 此处选择性放入一个 p 元素 -->
       <slot name="hint"></slot>
     </div>
   </div>

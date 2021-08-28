@@ -1,28 +1,38 @@
-import {request} from './request.js'
+import { request } from './request.js'
 
-// 验证邮箱或用户名是否存在
-function testExist({key, value}) {
+// 验证邮箱是否存在
+function testEmailExist(email) {
   return request({
-    url: '/api/testexist',
-    params: {key, value}
+    url: 'forum/auth/testEmailExist',
+    params: { email }
+  })
+}
+
+// 验证手机是否存在
+function testPhoneExist(phone) {
+  return request({
+    url: 'forum/auth/testPhoneExist',
+    params: { phone }
   })
 }
 
 // 注册
-function register(email, username, password, captcha) {
+function register(email, username, password, phone, code) {
   return request({
-    url: '/register',
+    url: 'forum/auth/register',
     method: 'post',
     data: {
       email,
       username,
       password,
-      captcha: captcha.toLowerCase()
+      phone,
+      code
     }
   })
 }
 
 export default {
   register,
-  testExist
+  testEmailExist,
+  testPhoneExist
 }

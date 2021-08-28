@@ -1,7 +1,7 @@
 // 客户端
 import {request} from './request.js'
 
-// 根据id和tag显示文章列表
+// 根据 id 和 tag 显示文章列表
 function getTopics(page, tag) {
   return request({
     url: '/topics',
@@ -12,7 +12,7 @@ function getTopics(page, tag) {
   })
 }
 
-// 根据id获取文章
+// 根据 id 获取文章
 function getTopic(topic_id) {
   return request({
     url: '/topic',

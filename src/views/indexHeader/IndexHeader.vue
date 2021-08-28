@@ -47,7 +47,7 @@
       if(isMobile) this.isNavShow = false
     },
 		methods: {
-      // 统一使用replace
+      // 统一使用 replace
       router(path) {
         if(this.$route.path == path) return
         this.$router.replace(path)

@@ -1,10 +1,12 @@
 <template>
   <!-- 此组件仅用于展示和切换验证码图片 -->
-  <div
+
+  <!-- <div
   v-html="captchaSvg"
   @click="getNewCaptcha"
   class="captcha"
-  title="点击切换验证码"></div>
+  title="点击切换验证码"></div> -->
+  <img @click="getNewCaptcha" :src="'data:text/html;base64,' + captchaBase64">
 </template>
 
 <script>
@@ -12,14 +14,15 @@
     name: 'captcha',
     data() {
       return {
-        captchaSvg: ''
+        captchaBase64: ''
       }
     },
     methods: {
       // 获取验证码
       getNewCaptcha() {
         this.$axios.login.getCaptcha().then(res => {
-          this.captchaSvg = res.data
+          console.log(res);
+          this.captchaBase64 = res.data.data
         })
       }
     },

@@ -5,81 +5,170 @@
     </template>
 
     <template>
-      <form class="input-form">
-        <!-- 邮箱 -->
-        <good-input label="注册邮箱" label-id="email">
-          <input
-            type="text"
-            name="email"
-            id="email"
-            v-model.trim="email"
-            @input="inputEmail"
-          />
-          <template #hint>
-            <p v-show="email">{{ emailTips }}</p>
-          </template>
-        </good-input>
-
-        <!-- 昵称 -->
-        <good-input label="昵称" label-id="username">
-          <input
-            type="text"
-            name="username"
-            id="username"
-            v-model.trim="username"
-            @input="inputUsername"
-            placeholder="2-10个字符"
-          />
-          <template #hint>
-            <p v-show="username">{{ usernameTips }}</p>
-          </template>
-        </good-input>
-
-        <!-- 密码 -->
-        <good-input label="密码" label-id="password">
-          <input
-            type="password"
-            name="password"
-            id="password"
-            v-model="password"
-            @input="inputPassword"
-            placeholder="6-12位字符的密码"
-          />
-          <template #hint>
-            <p v-show="password">{{ passwordTips }}</p>
-          </template>
-        </good-input>
-
-        <!-- 再次密码 -->
-        <good-input label="再次确认密码" label-id="confirm">
-          <input
-            type="password"
-            name="confirm"
-            id="confirm"
-            v-model="confirm"
-            @input="inputConfirm"
-            placeholder="请再次确认密码"
-          />
-          <template #hint>
-            <p v-show="confirm">{{ confirmTips }}</p>
-          </template>
-        </good-input>
-
-        <good-input label="验证码" label-id="captcha">
-          <input type="text" id="captcha" v-model="captcha" />
-          <template #hint>
-            <p v-show="isCaptchaWrong">{{ captchaTips }}</p>
-          </template>
-        </good-input>
-
-        <!-- 验证码图片 -->
-        <captcha />
+      <div class="input-form">
+        <el-form :model="submitData" ref="submitData" status-icon>
+          <el-form-item
+            prop="username"
+            :rules="[
+              {
+                required: true,
+                message: '请输入用户名',
+                trigger: 'blur'
+              },
+              {
+                min: 5,
+                max: 25,
+                message: '长度在 5 到 25 个字符',
+                trigger: 'blur'
+              }
+            ]"
+          >
+            <!-- 用户名 -->
+            <el-input
+              placeholder="请输入用户名"
+              prefix-icon="el-icon-user"
+              v-model="submitData.username"
+            >
+            </el-input>
+          </el-form-item>
+          <!-- 密码 -->
+          <el-form-item
+            prop="password"
+            :rules="[
+              {
+                required: true,
+                message: '请输入密码',
+                trigger: 'blur'
+              },
+              {
+                min: 5,
+                max: 25,
+                message: '长度在 5 到 25 个字符',
+                trigger: 'blur'
+              }
+            ]"
+          >
+            <el-input
+              placeholder="请输入密码"
+              prefix-icon="el-icon-lock"
+              v-model="submitData.password"
+              show-password
+            >
+            </el-input>
+          </el-form-item>
+          <!-- 确认密码 -->
+          <el-form-item
+            prop="confirmPassword"
+            :rules="[
+              {
+                required: true,
+                message: '再次输入确认密码',
+                trigger: 'blur'
+              },
+              {
+                min: 5,
+                max: 25,
+                message: '长度在 5 到 25 个字符',
+                trigger: 'blur'
+              }
+            ]"
+          >
+            <el-input
+              placeholder="请输入密码"
+              prefix-icon="el-icon-lock"
+              v-model="submitData.confirmPassword"
+              show-password
+            >
+            </el-input>
+          </el-form-item>
+          <!-- 手机号 -->
+          <el-form-item
+            prop="phone"
+            :rules="[
+              {
+                required: true,
+                message: '请输入手机号',
+                trigger: 'blur'
+              },
+              {
+                pattern: /^0{0,1}(13[0-9]|15[7-9]|153|156|18[7-9])[0-9]{8}$/,
+                message: '手机号格式不对',
+                trigger: 'blur'
+              },
+              {
+                required: true,
+                validator: testPhone,
+                trigger: 'blur'
+              }
+            ]"
+          >
+            <el-input placeholder="手机号" v-model="submitData.phone">
+            </el-input>
+          </el-form-item>
+          <!-- 邮箱 -->
+          <el-form-item
+            prop="email"
+            :rules="[
+              {
+                required: true,
+                message: '请输入邮箱地址',
+                trigger: 'blur'
+              },
+              {
+                type: 'email',
+                message: '请输入正确的邮箱地址',
+                trigger: ['blur', 'change']
+              },
+              {
+                required: true,
+                validator: testEmail,
+                trigger: 'blur'
+              }
+            ]"
+          >
+            <el-input
+              v-model="submitData.email"
+              placeholder="请输入邮箱地址"
+              @blur="testEmail"
+            ></el-input>
+          </el-form-item>
+          <!-- 邮箱验证码 -->
+          <el-form-item
+            prop="code"
+            :rules="[
+              {
+                required: true,
+                message: '请输入验证码',
+                trigger: 'blur'
+              }
+            ]"
+          >
+            <el-input placeholder="邮箱验证码" v-model="submitData.code">
+              <el-button
+                slot="append"
+                :disabled="disable"
+                :class="{ codeGeting: isGeting }"
+                @click="getVerifyCode"
+                >{{ getCode }}</el-button
+              >
+            </el-input>
+          </el-form-item>
+        </el-form>
 
         <div class="submit-box">
-          <button class="submit" @click.prevent="submit">注册</button>
+          <!-- <button class="submit" @click.prevent="submit">注册</button> -->
+          <el-button
+            type="success"
+            class="submit"
+            @click.prevent="submit"
+            round
+          >
+            注册</el-button
+          >
+          <br />
           <a @click="$router.push('/login')">已经注册？前往登录</a>
         </div>
-      </form>
+      </div>
     </template>
   </basic-panel>
 </template>
@@ -90,37 +179,69 @@ import Register from '@network/register'
 import GoodInput from '@components/common/GoodInput'
 import Captcha from '@components/common/Captcha'
 
-// 定义防抖函数
-function debounce(fn, delay = 300) {
-  var timer = null
-  return function() {
-    if (timer) {
-      clearTimeout(timer)
-    }
-    // 这里取到的this是vue实例
-    timer = setTimeout(fn.bind(this), delay)
-  }
-}
+// // 定义防抖函数
+// function debounce(fn, delay = 300) {
+//   var timer = null
+//   return function() {
+//     if (timer) {
+//       clearTimeout(timer)
+//     }
+//     // 这里取到的 this 是 vue 实例
+//     timer = setTimeout(fn.bind(this), delay)
+//   }
+// }
 
 export default {
   name: 'register',
   data() {
     return {
-      email: '',
-      username: '',
-      password: '',
-      confirm: '',
-      captcha: '',
-      isUsernameAvailable: false,
-      isPasswordAvailable: false,
-      isEmailAvailable: false,
-      isConfirmAvailable: false,
-      usernameTips: '',
-      passwordTips: '',
-      emailTips: '',
-      confirmTips: '',
-      captchaTips: '验证码错误！',
-      isCaptchaWrong: false
+      submitData: {
+        email: '',
+        username: '',
+        password: '',
+        confirmPassword: '',
+        code: '',
+        phone: ''
+      },
+      count: 60,
+      getCode: '获取验证码',
+      disable: false,
+      isGeting: false,
+      testEmail: (rule, value, callback) => {
+        if (value) {
+          console.log('ppp', value)
+          Register.testEmailExist(value)
+            .then((res) => {
+              const check = res.data
+              if (check['data'] == true) {
+                callback(new Error('该邮箱已经存在，不能重复'))
+              } else {
+                callback()
+              }
+            })
+            .catch((error) => {
+              callback()
+            })
+        }
+      },
+      testPhone: (rule, value, callback) => {
+        if (value) {
+          console.log('ppp', value)
+          Register.testPhoneExist(value)
+            .then((res) => {
+              console.log(res)
+              const check = res.data
+              if (check['data'] == true) {
+                callback(new Error('该手机号已经存在，不能重复'))
+              } else {
+                callback()
+              }
+            })
+            .catch((error) => {
+              callback()
+            })
+        }
+      }
     }
   },
   components: {
@@ -129,148 +250,66 @@ export default {
     Captcha
   },
   methods: {
-    // 验证邮箱
-    inputEmail: debounce(function() {
-      if (!this.email) {
-        this.isEmailAvailable = false
-      } else if (this.email.length > 30) {
-        this.isEmailAvailable = false
-        this.emailTips = '请输入正确的邮箱！！'
-      } else if (
-        !/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(this.email)
-      ) {
-        this.isEmailAvailable = false
-        this.emailTips = '请输入正确的邮箱格式'
-      } else {
-        // 此处发送请求,验证邮箱是否存在
-        Register.testExist({
-          key: 'email',
-          value: this.email
-        }).then((res) => {
-          if (res.data.msg == 'ok') {
-            this.isEmailAvailable = true
-            this.emailTips = '√'
-          } else {
-            this.isEmailAvailable = false
-            this.emailTips = '该邮箱已注册'
-          }
-        })
+    getVerifyCode() {
+      if (!this.submitData.email) {
+        this.$message.error('请输入邮箱地址')
+        return
       }
-    }),
-
-    //验证昵称
-    inputUsername: debounce(function() {
-      if (!this.username) {
-        this.isUsernameAvailable = false
-      } else if (this.username.length < 2 || this.username.length > 10) {
-        this.isUsernameAvailable = false
-        this.usernameTips = '昵称长度应为2-10个字符'
-      } else if (/\s/.test(this.username)) {
-        this.isUsernameAvailable = false
-        this.usernameTips = '昵称不应包含空格'
-      } else {
-        // 验证昵称是否存在
-        Register.testExist({
-          key: 'username',
-          value: this.username
-        }).then((res) => {
-          if (res.data.msg == 'ok') {
-            this.isUsernameAvailable = true
-            this.usernameTips = '√'
-          } else {
-            this.isUsernameAvailable = false
-            this.usernameTips = '昵称已存在'
-          }
-        })
-      }
-    }),
-
-    // 验证密码
-    inputPassword() {
-      if (!this.password) {
-        this.isPasswordAvailable = false
-      } else if (this.password.length < 6 || this.password.length > 12) {
-        this.isPasswordAvailable = false
-        this.passwordTips = '密码长度应为6-12字符'
-      } else if (/\s/.test(this.password)) {
-        this.isPasswordAvailable = false
-        this.passwordTips = '密码不应包含空格'
-      } else {
-        this.isPasswordAvailable = true
-        this.passwordTips = '√'
-      }
-      // 每次修改密码，都要重新验证confirm
-      this.inputConfirm()
+      const email = this.submitData.email
+      var countDown = setInterval(() => {
+        if (this.count < 1) {
+          this.isGeting = false
+          this.disable = false
+          this.getCode = '获取验证码'
+          this.count = 60
+          clearInterval(countDown)
+        } else {
+          this.isGeting = true
+          this.disable = true
+          this.getCode = this.count-- + 's后重发'
+        }
+      }, 1000)
+      this.$axios.login.sendEmailCode(email, 'register')
     },
-
-    // 验证再次输入的密码
-    inputConfirm() {
-      if (!this.confirm) {
-        this.isConfirmAvailable = false
-      } else if (this.password == this.confirm) {
-        this.isConfirmAvailable = true
-        this.confirmTips = '√'
-      } else if (this.confirm !== this.password) {
-        this.isConfirmAvailable = false
-        this.confirmTips = '两次输入密码不一致'
-      }
-    },
-
     // 提交注册数据
     submit() {
-      // 验证非空
-      if (
-        !this.username ||
-        !this.password ||
-        !this.email ||
-        !this.confirm ||
-        !this.captcha
-      ) {
-        alert('请输入完整注册信息')
-      } else if (
-        this.isEmailAvailable &&
-        this.isUsernameAvailable &&
-        this.isPasswordAvailable &&
-        this.isConfirmAvailable
-      ) {
-        // 注册
-        Register.register(
-          this.email,
-          this.username,
-          this.password,
-          this.captcha
-        ).then((res) => {
-          if (res.data.msg == 'captcha wrong') {
-            // 验证码错误
-            this.isCaptchaWrong = true
-            this.captcha = ''
-          } else if (res.data.msg == 'ok') {
-            this.isCaptchaWrong = false
-            localStorage.setItem('token', 'Bearer ' + res.data.token)
-            // 返回用户数据，保存到vuex中
-            this.$store.commit('setUser', res.data.user)
-            // 注册成功跳转
-            alert('注册成功')
-            this.$router.replace('/')
-          } else {
-            this.isCaptchaWrong = false
-            // 服务端验证失败
-            alert('注册失败，请重试')
-            this.refresh()
+      this.$refs['submitData'].validate((valid) => {
+        if (valid) {
+          if (this.submitData.password != this.submitData.confirmPassword) {
+            this.$message.error('两次输入密码不一致')
+            return
           }
-        })
-      } else {
-        alert('注册信息有误，请检查')
-      }
-    },
 
-    // 清空所有用户输入的数据
-    refresh() {
-      this.email = ''
-      this.username = ''
-      this.password = ''
-      this.confirm = ''
-      this.captcha = ''
+          // 开始注册
+          Register.register(
+            this.submitData.email,
+            this.submitData.username,
+            this.submitData.password,
+            this.submitData.phone,
+            this.submitData.code
+          )
+            .then((res) => {
+              // 如果存在 code 说明登陆失败
+              if (res.data.code) {
+                console.error(res)
+                this.$message.error('注册失败')
+                return
+              }
+              // 储存 token 到本地
+              localStorage.setItem('token', 'Bearer ' + res.data.access_token)
+              localStorage.setItem('refresh_token', res.data.refresh_token)
+              this.$message.success('注册成功')
+              this.$router.push('/')
+            })
+            .catch((error) => {
+              console.error(error)
+              this.$message.error('注册失败')
+            })
+        } else {
+          this.$message.error('请按照要求进行填写')
+          return false
+        }
+      })
     }
   }
 }
@@ -289,7 +328,7 @@ export default {
 .submit-box {
   .submit {
     @include basic-button;
-    margin-left: 65px;
+    margin-bottom: 25px;
   }
   a {
     margin-left: 10px;

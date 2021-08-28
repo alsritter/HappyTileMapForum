@@ -136,7 +136,7 @@ var routes = [
 ]
 const router = new VueRouter({
   routes,
-  mode: 'history'
+  mode: 'hash'
 })
 
 // // 设置顶端标题

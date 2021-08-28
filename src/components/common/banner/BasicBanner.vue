@@ -48,11 +48,11 @@
     },
     created() {
       // 请求轮播图url
-      this.$axios.getData.getBanner().then(res => {
-        this.imgs = res.data.map(path => {
-          return 'http://localhost:3000' + path
-        })
-      })
+      // this.$axios.getData.getBanner().then(res => {
+      //   this.imgs = res.data.map(path => {
+      //     return 'http://localhost:3000' + path
+      //   })
+      // })
     },
     mounted() {
       // 轮播图定时器

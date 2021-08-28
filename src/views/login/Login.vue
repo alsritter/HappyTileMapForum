@@ -1,127 +1,286 @@
 <template>
   <basic-panel>
     <template #header>
-      <span class='main-title'>登录</span>
+      <span class="main-title">登录</span>
     </template>
 
     <template>
-      <form class="input-form">
-        <!-- 邮箱 -->
-        <good-input label="登录邮箱" label-id="email">
-          <input type="text" name="email" v-model="email" id="email">
-        </good-input>
-
-        <!-- 密码 -->
-        <good-input label="密码" label-id="password">
-          <input type="password" name="password" v-model="password" id="password">
-        </good-input>
-
-        <!-- 验证码输入 -->
-        <good-input label="验证码" label-id="captcha">
-          <input type="text" name="captcha" v-model="captcha" id="captcha">
-          <template #hint>
-            <p v-show="isCaptchaWrong">{{captchaTips}}</p>
-          </template>
-        </good-input>
-
-        <!-- 验证码图片 -->
-        <captcha ref="captcha"/>
-
+      <div class="input-form">
+        <el-tabs v-model="loginType" type="card">
+          <el-tab-pane label="账号密码登陆" name="password">
+            <el-form :model="passwordForm" ref="passwordForm" status-icon>
+              <el-form-item
+                prop="username"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请输入用户名',
+                    trigger: 'blur'
+                  },
+                  {
+                    min: 5,
+                    max: 25,
+                    message: '长度在 5 到 25 个字符',
+                    trigger: 'blur'
+                  }
+                ]"
+              >
+                <!-- 用户名 -->
+                <el-input
+                  placeholder="请输入用户名"
+                  prefix-icon="el-icon-user"
+                  v-model="passwordForm.username"
+                >
+                </el-input>
+              </el-form-item>
+              <el-form-item
+                prop="password"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请输入密码',
+                    trigger: 'blur'
+                  },
+                  {
+                    min: 5,
+                    max: 25,
+                    message: '长度在 5 到 25 个字符',
+                    trigger: 'blur'
+                  }
+                ]"
+              >
+                <!-- 密码 -->
+                <el-input
+                  placeholder="请输入密码"
+                  prefix-icon="el-icon-lock"
+                  v-model="passwordForm.password"
+                  show-password
+                >
+                </el-input>
+              </el-form-item>
+              <el-form-item
+                prop="captcha"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请输入验证码',
+                    trigger: 'blur'
+                  }
+                ]"
+              >
+                <el-input
+                  placeholder="请输入验证码"
+                  v-model="passwordForm.captcha"
+                >
+                </el-input>
+              </el-form-item>
+              <el-form-item>
+                <!-- 验证码图片 -->
+                <captcha ref="captcha" />
+              </el-form-item>
+            </el-form>
+          </el-tab-pane>
+          <!-- 邮箱登陆 -->
+          <el-tab-pane label="邮箱验证登陆" name="email">
+            <el-form :model="emailForm" ref="emailForm" status-icon>
+              <el-form-item
+                prop="email"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请输入邮箱地址',
+                    trigger: 'blur'
+                  },
+                  {
+                    type: 'email',
+                    message: '请输入正确的邮箱地址',
+                    trigger: ['blur', 'change']
+                  }
+                ]"
+              >
+                <el-input
+                  v-model="emailForm.email"
+                  placeholder="请输入邮箱地址"
+                ></el-input>
+              </el-form-item>
+              <el-form-item
+                prop="code"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请输入验证码',
+                    trigger: 'blur'
+                  }
+                ]"
+              >
+                <el-input placeholder="邮箱验证码" v-model="emailForm.code">
+                  <el-button
+                    slot="append"
+                    :disabled="disable"
+                    :class="{ codeGeting: isGeting }"
+                    @click="getVerifyCode"
+                    >{{ getCode }}</el-button
+                  >
+                </el-input>
+              </el-form-item>
+            </el-form>
+          </el-tab-pane>
+        </el-tabs>
         <!-- 提交 -->
         <div class="submit-box">
-          <button class="submit" @click.prevent="submit">登录</button>
+          <!-- <button class="submit" @click.prevent="submit">登录</button> -->
+          <el-button type="success" class="submit" @click.prevent="submit" round
+            >登录</el-button
+          >
+          <br />
           <a @click="$router.push('/register')">未有账号？前往注册</a>
         </div>
-      </form>
+      </div>
     </template>
   </basic-panel>
-
 </template>
 
 <script>
-  import BasicPanel from '@components/common/panel/BasicPanel'
-  import GoodInput from '@components/common/GoodInput'
-  import Captcha from '@components/common/Captcha'
+import BasicPanel from '@components/common/panel/BasicPanel'
+import GoodInput from '@components/common/GoodInput'
+import Captcha from '@components/common/Captcha'
 
-  export default {
-    name: 'login',
-    data() {
-      return {
-        email: '',
+export default {
+  name: 'login',
+  data() {
+    return {
+      loginType: 'password',
+      count: 60,
+      getCode: '获取验证码',
+      disable: false,
+      isGeting: false,
+      passwordForm: {
+        username: '',
         password: '',
-        captcha: '',
-        captchaTips: '验证码错误！',
-        isCaptchaWrong: false
-      }
-    },
-    components: {
-      BasicPanel,
-      GoodInput,
-      Captcha
-    },
-    methods: {
-      // 登录
-      submit() {
-        if (!this.email || !this.password) {
-          alert('登录邮箱或密码不能为空')
-          return
-        }
-        this.$axios.login.login(this.email, this.password, this.captcha)
-          .then(res => {
-            if (res.data.msg == 'ok') {
-              this.isCaptchaWrong = false
-              alert('登录成功')
-              // 储存token到本地
-              localStorage.setItem('token', "Bearer " + res.data.token)
-              // 提交用户数据到vuex
-              this.$store.commit('setUser', res.data.user)
-              this.$router.replace('/')
-            }
-            // 验证码错误
-            else if (res.data.msg == 'captcha wrong') {
-              this.isCaptchaWrong = true
-              this.captcha = ''
-              // 刷新验证码
-              this.$refs.captcha.getNewCaptcha()
-            } else {
-              this.isCaptchaWrong = false
-              alert('登录失败，请检查登录邮箱或密码是否正确')
-            }
-          })
+        captcha: ''
       },
+      emailForm: {
+        email: '',
+        code: ''
+      }
+    }
+  },
+  components: {
+    BasicPanel,
+    GoodInput,
+    Captcha
+  },
+  methods: {
+    getVerifyCode() {
+      if (!this.emailForm.email) {
+        this.$message.error('请输入邮箱地址')
+        return
+      }
+      const email = this.emailForm.email
+      var countDown = setInterval(() => {
+        if (this.count < 1) {
+          this.isGeting = false
+          this.disable = false
+          this.getCode = '获取验证码'
+          this.count = 60
+          clearInterval(countDown)
+        } else {
+          this.isGeting = true
+          this.disable = true
+          this.getCode = this.count-- + 's后重发'
+        }
+      }, 1000)
+      this.$axios.login.sendEmailCode(email, 'login')
     },
+    // 登录
+    submit() {
+      const formName = this.loginType == 'email' ? 'emailForm' : 'passwordForm'
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          if (this.loginType == 'email') {
+            this.$axios.login
+              .loginByEmail(this.emailForm.email, this.emailForm.code)
+              .then((res) => {
+                // 如果存在 code 说明登陆失败
+                if (res.data.code) {
+                  console.error(res)
+                  this.$message.error('登陆失败')
+                  return
+                }
+                // 储存 token 到本地
+                localStorage.setItem('token', 'Bearer ' + res.data.access_token)
+                localStorage.setItem('refresh_token', res.data.refresh_token)
+                this.$message.success('成功登陆')
+                this.$router.push('/')
+              })
+              .catch((error) => {
+                console.error(error)
+                this.$message.error('登陆失败')
+              })
+          } else {
+            this.$axios.login
+              .loginByPassword(
+                this.passwordForm.username,
+                this.passwordForm.password,
+                this.passwordForm.captcha
+              )
+              .then((res) => {
+                // 如果存在 code 说明登陆失败
+                if (res.data.code) {
+                  console.error(res)
+                  this.$message.error('登陆失败')
+                  return
+                }
+                // 储存 token 到本地
+                localStorage.setItem('token', 'Bearer ' + res.data.access_token)
+                localStorage.setItem('refresh_token', res.data.refresh_token)
+                this.$message.success('成功登陆')
+                this.$router.push('/')
+              })
+              .catch((error) => {
+                console.error(error)
+                this.$message.error('登陆失败')
+              })
+          }
+        } else {
+          this.$message.error('请按照要求进行填写')
+          return false
+        }
+      })
+    }
   }
+}
 </script>
 
 <style lang="scss" scoped>
-  .main-title {
-    @include main-title
+.main-title {
+  @include main-title;
+}
+
+.input-form {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.submit-box {
+  .submit {
+    @include basic-button;
+    margin-bottom: 25px;
   }
 
-  .input-form {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  a {
+    margin-left: 10px;
+    color: #1e88e5;
+    text-decoration: underline;
+    cursor: pointer;
   }
+}
 
-  .submit-box {
-    .submit {
-      @include basic-button;
-      margin-left: 65px;
-    }
-
-    a {
-      margin-left: 10px;
-      color: #1E88E5;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-  }
-
-  // 验证码图片居中
-  .captcha {
-    margin-left: 60px;
-    margin-bottom: 20px;
-  }
+// 验证码图片居中
+.captcha {
+  margin-left: 60px;
+  margin-bottom: 20px;
+}
 </style>
