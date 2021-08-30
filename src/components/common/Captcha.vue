@@ -22,7 +22,7 @@
       getNewCaptcha() {
         this.$axios.login.getCaptcha().then(res => {
           console.log(res);
-          this.captchaBase64 = res.data.data
+          this.captchaBase64 = res.data
         })
       }
     },

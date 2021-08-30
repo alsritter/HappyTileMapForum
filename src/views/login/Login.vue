@@ -202,14 +202,14 @@ export default {
               .loginByEmail(this.emailForm.email, this.emailForm.code)
               .then((res) => {
                 // 如果存在 code 说明登陆失败
-                if (res.data.code) {
+                if (res.code) {
                   console.error(res)
                   this.$message.error('登陆失败')
                   return
                 }
                 // 储存 token 到本地
-                localStorage.setItem('token', 'Bearer ' + res.data.access_token)
-                localStorage.setItem('refresh_token', res.data.refresh_token)
+                localStorage.setItem('access_token', 'Bearer ' + res.access_token)
+                localStorage.setItem('refresh_token', res.refresh_token)
                 this.$message.success('成功登陆')
                 this.$router.push('/')
               })
@@ -226,14 +226,14 @@ export default {
               )
               .then((res) => {
                 // 如果存在 code 说明登陆失败
-                if (res.data.code) {
+                if (res.code) {
                   console.error(res)
                   this.$message.error('登陆失败')
                   return
                 }
                 // 储存 token 到本地
-                localStorage.setItem('token', 'Bearer ' + res.data.access_token)
-                localStorage.setItem('refresh_token', res.data.refresh_token)
+                localStorage.setItem('access_token', 'Bearer ' + res.access_token)
+                localStorage.setItem('refresh_token', res.refresh_token)
                 this.$message.success('成功登陆')
                 this.$router.push('/')
               })

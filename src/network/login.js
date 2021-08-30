@@ -30,9 +30,9 @@ function getUser() {
   request({
     url: 'forum/auth/getuser'
   }).then((res) => {
-    if (res.data.msg == 'ok') {
+    if (res.msg == 'ok') {
       // 把服务端读出来的 token 数据保存到 vuex
-      this.$store.commit('setUser', res.data.data)
+      this.$store.commit('setUser', res)
     } else {
       console.log('未登录')
     }
