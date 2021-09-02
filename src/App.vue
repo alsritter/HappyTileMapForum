@@ -3,7 +3,7 @@
     <index-header />
     <main>
       <!--      <keep-alive include="topics-panel">-->
-      <router-view class="main-left"></router-view>
+      <router-view class="main-left" v-if="isRouterAlive"></router-view>
       <!--      </keep-alive>-->
       <index-aside class="main-right" />
     </main>
@@ -24,10 +24,32 @@ export default {
     IndexAside,
     IndexFooter
   },
+  provide() {
+    return {
+      reload: this.reload
+    }
+  },
+  data() {
+    return {
+      isRouterAlive: true
+    }
+  },
   mounted() {
     // 获取登录信息
     // 每次刷新页面，都向服务器请求登录
     this.$axios.login.getUser.call(this)
+  },
+  methods: {
+    /**
+     * 刷新当前页面
+     * 参考：https://segmentfault.com/a/1190000017007631
+     */
+    reload() {
+      this.isRouterAlive = false
+      this.$nextTick(function() {
+        this.isRouterAlive = true
+      })
+    }
   }
 }
 </script>

@@ -66,37 +66,51 @@ export default {
       var tag = this.tagName[this.tag]
       var title = this.title
       var content = this.$refs.editor.editorContent
-      var author = this.$store.state.user.username
 
       // 提交前检查：是否登录，信息是否完整， 文章内容是否达标
       var text = this.$refs.editor.editor.txt.text()
-      if (!author) {
-        alert('请登录后再尝试')
-        return
-      } else if (!tag || !title || !text) {
+      if (!tag || !title || !text) {
         alert('请填写完整的信息')
         return
       } else if (title.length > 20) {
         alert('标题过长，请输入20个字符以内的标题')
         return
-      } else if (text.length < 10) {
+      } else if (text.length < 15) {
         alert('文章内容必须大于10个字符')
         return
       }
 
-      sendTopic({ tag, title, content, author }).then((res) => {
-        if (res.data.msg == 'ok') {
-          alert('提交成功')
-          this.$router.replace('/')
-          location.reload()
-        } else if (res.data.msg == 'login') {
-          alert('请登录后再进行操作')
-          this.$router.replace('/login')
-        } else {
-          alert('服务器繁忙，请稍后再试')
-          this.$router.replace('/')
-        }
-      })
+      sendTopic({ tag, title, content })
+        .then((res) => {
+          if (res.data) {
+            this.$message({
+              message: '发布成功',
+              type: 'success',
+              duration: 800,
+              onClose: () => {
+                this.$router.push({
+                  name: 'topic',
+                  params: { id: res.data }
+                })
+              }
+            })
+          } else {
+            this.$message({
+              showClose: true,
+              message: '服务器繁忙，请稍后再试',
+              type: 'error',
+              duration: 800
+            })
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: '服务器繁忙，请稍后再试',
+            type: 'error',
+            duration: 800
+          })
+        })
     }
   }
 }

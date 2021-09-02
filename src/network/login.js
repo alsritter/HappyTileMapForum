@@ -28,14 +28,9 @@ function loginByEmail(email, code) {
 // 每次加载页面，获取用户登录态
 function getUser() {
   request({
-    url: 'forum/auth/getuser'
+    url: 'forum/user/getuser'
   }).then((res) => {
-    if (res.msg == 'ok') {
-      // 把服务端读出来的 token 数据保存到 vuex
-      this.$store.commit('setUser', res)
-    } else {
-      console.log('未登录')
-    }
+    this.$store.commit('setUser', res.data)
   })
 }
 

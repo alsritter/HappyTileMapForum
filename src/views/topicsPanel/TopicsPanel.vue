@@ -44,24 +44,25 @@
         }
         var page = this.$refs.page.currentPage
         var tag = this.$refs.nav.currentTag
+
         this.$axios.getData.getTopics(page, tag).then(res => {
-          this.topics = res.data.topics
-          this.totalTopics = res.data.totalTopics
+          this.topics = res.data.records
+          this.totalTopics = res.data.total
         })
       },
       // 切换前后的页数
       go(n) {
         this.$axios.getData.getTopics(n, this.$refs.nav.currentTag).then(res => {
-          this.topics = res.data.topics
-          this.totalTopics = res.data.totalTopics
+          this.topics = res.data.records
+          this.totalTopics = res.data.total
         })
       },
     },
     // 获取topic列表
     created() {
       this.$axios.getData.getTopics(1, '全部').then(res => {
-        this.topics = res.data.topics
-        this.totalTopics = res.data.totalTopics
+        this.topics = res.data.records
+        this.totalTopics = res.data.total
       })
     },
 

@@ -40,38 +40,38 @@
       getTopic() {
         this.$axios.getData.getTopic(this.topic_id)
         .then(res => {
-          if(res.data.msg == 'ok') {
-            var topic = res.data.topic
+          if(res.data) {
+            var topic = res.data
             this.topicContent = topic.content
             // 定义头部信息
             var {
-              topic_id,
+              topicId,
               author,
               tag,
               title,
               prefer,
               browsed,
-              create_time,
-              last_modify_time,
+              createTime,
+              lastModifyTime,
               status
             } = topic
             this.topicHeader = {
-              topic_id,
+              topicId,
               author,
               tag,
               title,
               prefer,
               browsed,
-              create_time,
-              last_modify_time,
+              createTime,
+              lastModifyTime,
               status
             }
             // 定义评论信息
             this.topicComments = topic.comments
           }
           else {
-            alert('网络繁忙，请稍后再试')
-            this.$router.replace('/')
+            // alert('网络繁忙，请稍后再试')
+            // this.$router.replace('/')
           }
         })
       }

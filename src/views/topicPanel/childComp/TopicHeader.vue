@@ -3,7 +3,7 @@
     <span class="tag-box">{{topicHeader.tag}}</span>
     <span class="title">{{topicHeader.title}}</span>
     <div class="header-detail">
-      <span class="separate">发布于{{getDate(topicHeader.create_time)}} </span>
+      <span class="separate">发布于{{getDate(topicHeader.createTime)}} </span>
       <span class="separate">作者{{topicHeader.author}} </span>
       <span class="separate">{{topicHeader.browsed}}次浏览 </span>
       <span class="separate">来自 {{topicHeader.tag}} </span>

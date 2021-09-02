@@ -147,6 +147,7 @@ import Captcha from '@components/common/Captcha'
 
 export default {
   name: 'login',
+  inject: ['reload'],
   data() {
     return {
       loginType: 'password',
@@ -171,6 +172,40 @@ export default {
     Captcha
   },
   methods: {
+    /**
+     * 登陆成功
+     */
+    loginSucceed(res) {
+      // 储存 token 到本地
+      localStorage.setItem('access_token', 'Bearer ' + res.access_token)
+      localStorage.setItem('refresh_token', res.refresh_token)
+      this.$message.success({
+        message: '成功登陆',
+        type: 'success',
+        duration: 800,
+        onClose: () => {
+          this.$axios.login.getUser.call(this)
+          this.$router.push('/')
+        }
+      })
+    },
+    /**
+     * 登陆失败
+     */
+    loginFailure() {
+      this.$message.error({
+        message: '登陆失败',
+        type: 'error',
+        duration: 800,
+        onClose: () => {
+          // location.reload()
+          this.reload()
+        }
+      })
+    },
+    /**
+     * 取得邮箱验证码
+     */
     getVerifyCode() {
       if (!this.emailForm.email) {
         this.$message.error('请输入邮箱地址')
@@ -204,18 +239,14 @@ export default {
                 // 如果存在 code 说明登陆失败
                 if (res.code) {
                   console.error(res)
-                  this.$message.error('登陆失败')
+                  this.loginFailure()
                   return
                 }
-                // 储存 token 到本地
-                localStorage.setItem('access_token', 'Bearer ' + res.access_token)
-                localStorage.setItem('refresh_token', res.refresh_token)
-                this.$message.success('成功登陆')
-                this.$router.push('/')
+                this.loginSucceed(res)
               })
               .catch((error) => {
                 console.error(error)
-                this.$message.error('登陆失败')
+                this.loginFailure()
               })
           } else {
             this.$axios.login
@@ -228,18 +259,14 @@ export default {
                 // 如果存在 code 说明登陆失败
                 if (res.code) {
                   console.error(res)
-                  this.$message.error('登陆失败')
+                  this.loginFailure()
                   return
                 }
-                // 储存 token 到本地
-                localStorage.setItem('access_token', 'Bearer ' + res.access_token)
-                localStorage.setItem('refresh_token', res.refresh_token)
-                this.$message.success('成功登陆')
-                this.$router.push('/')
+                this.loginSucceed(res)
               })
               .catch((error) => {
                 console.error(error)
-                this.$message.error('登陆失败')
+                this.loginFailure()
               })
           }
         } else {

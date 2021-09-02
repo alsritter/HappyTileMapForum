@@ -2,7 +2,7 @@
 import {request} from './request.js'
 
 // 上传头像
-function uploadAvatar(img) {
+export function uploadAvatar(img) {
   return request({
     url: '/setavatar',
     method: 'post',
@@ -12,25 +12,24 @@ function uploadAvatar(img) {
 }
 
 // 上传文章
-function sendTopic({tag, title, content, author}) {
+export function sendTopic({tag, title, content}) {
   return request({
-    url: '/topic',
+    url: '/forum/topics/send-topic',
     method: 'post',
     data: {
       tag,
       title,
-      content,
-      author
+      content
     }
   })
 }
 
 // 上传评论
-function sendComment({commenter, content, topicId}) {
+export function sendComment({content, masterId, type}) {
   return request({
-    url: '/comment',
+    url: '/forum/comment/send-comment',
     method: 'post',
-    data: {commenter, content, topicId}
+    data: {content, masterId, type}
   })
 }
 

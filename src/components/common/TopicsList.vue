@@ -3,22 +3,25 @@
     <li
       v-for="(topic, index) in topics"
       :key="index"
-      @click="clickTopic(topic.topic_id)"
+      @click="clickTopic(topic.topicId)"
     >
       <!-- 头像 -->
       <div :title="topic.author">
-        <img class="owner-avatar" :src="avatarSrc(topic.authorAvatar)" alt="" />
+        <!-- <img class="owner-avatar" :src="avatarSrc(topic.authorAvatar)" alt="" /> -->
+        <el-avatar class="owner-avatar" :src="avatarSrc(topic.authorAvatar)" fit='contain'></el-avatar>
       </div>
       <!-- 评论数、浏览量 -->
       <div class="number">
-        <span class="comments" title="回复数">{{ topic.comments.length }}</span>
+        <span class="comments" title="回复数">{{ topic.comments }}</span>
         /
         <span class="browsed" title="浏览量">{{ topic.browsed }}</span>
       </div>
       <!-- tag -->
-      <span class="tag-box"
-        ><span>{{ getTag(topic.tag, topic.status) }}</span></span
-      >
+      <span class="tag-box">
+        <span :class="{ 'is-top': topic.status == 1 }">{{
+          getTag(topic.tag, topic.status)
+        }}</span>
+      </span>
       <!-- 标题 -->
       <div class="title">{{ topic.title }}</div>
       <!-- 最后评论时间 -->
@@ -33,7 +36,6 @@
 </template>
 
 <script>
-import { ORIGIN } from '../../config'
 
 export default {
   name: 'topics-list',
@@ -43,8 +45,13 @@ export default {
     avatarSrc() {
       return function(avatar) {
         if (avatar) {
-          return ORIGIN + '/uploads/face/' + avatar
-        } else return ORIGIN + '/public/img/default/avatar-default.png'
+          // @assets/img/raspberry_logo.png
+          return avatar
+        } else {
+          // return ORIGIN + '/public/img/default/avatar-default.png'
+          // return ORIGIN + '/src/assets/img/avatar-default.png'
+          return require('@/assets/img/avatar-default.png')
+        }
       }
     },
     getTag() {
@@ -83,13 +90,13 @@ export default {
   height: 36px;
   width: 36px;
   margin-top: 7px;
-  border: 1px solid #000000;
+  // border: 1px solid #000000;
 }
 
 .number {
   margin-left: 10px;
   height: 50px;
-  width: 50px;
+  // width: 50px;
   line-height: 50px;
   .comments {
     font-size: 14px;
@@ -100,6 +107,7 @@ export default {
   }
   .browsed {
     font-size: 12px;
+    margin-right: 10px;
     &:hover {
       text-decoration: underline;
     }
@@ -114,6 +122,10 @@ export default {
   white-space: nowrap;
   display: flex;
   align-items: center;
+}
+
+.is-top {
+ background-color: #d83a62  !important;
 }
 
 .title {

@@ -21,7 +21,6 @@
       // 获取验证码
       getNewCaptcha() {
         this.$axios.login.getCaptcha().then(res => {
-          console.log(res);
           this.captchaBase64 = res.data
         })
       }
