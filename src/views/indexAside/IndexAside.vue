@@ -11,7 +11,12 @@
           </button>
           <div v-else>
             <!-- <img class="user-avatar" :src="avatarSrc" alt="默认头像" /> -->
-            <el-avatar class="user-avatar" :src="avatarSrc" :size="50" fit='contain'></el-avatar>
+            <el-avatar
+              class="user-avatar"
+              :src="avatarSrc"
+              :size="50"
+              fit="contain"
+            ></el-avatar>
             <div class="user-name">
               <span @click="profile">{{
                 this.$store.state.user.username
@@ -30,7 +35,12 @@
           </button>
           <div v-else>
             <!-- <img class="user-avatar" :src="avatarSrc" alt="默认头像" /> -->
-             <el-avatar class="user-avatar" :src="avatarSrc" :size="50" fit='contain'></el-avatar>
+            <el-avatar
+              class="user-avatar"
+              :src="avatarSrc"
+              :size="50"
+              fit="contain"
+            ></el-avatar>
             <div class="user-name">
               <span @click="profile">{{
                 this.$store.state.user.username
@@ -39,7 +49,9 @@
           </div>
         </div>
         <!-- <button class="create-button" @click="create">发布话题</button> -->
-        <el-button class="create-button" type="success" plain @click="create">发布话题</el-button>
+        <el-button class="create-button" type="success" plain @click="create">
+          发布话题
+        </el-button>
       </template>
     </basic-panel>
 
@@ -54,12 +66,12 @@
 
     <basic-panel class="panel community">
       <template v-slot:header
-        >Node.js 开源技术社区</template
+        >游戏地图在线编辑器</template
       >
       <template>
-        <a href="https://cnodejs.org/" target="_blank">
+        <a href="https://alsritter.gitee.io/map-editor-online/" target="_blank">
           <div class="logo">
-            <img src="~@assets/img/svg/cnodejs.svg" alt="Node.js社区" />
+            <img src="~@assets/img/svg/logo-edit.svg" alt="Node.js社区" />
           </div>
         </a>
       </template>
@@ -95,7 +107,6 @@
 <script>
 import BasicPanel from '@components/common/panel/BasicPanel.vue'
 import BasicBanner from '@components/common/banner/BasicBanner.vue'
-import { ORIGIN } from '../../config'
 export default {
   name: 'index-aside',
   data() {
@@ -203,6 +214,12 @@ export default {
   box-sizing: border-box;
   width: 100%;
   padding: 10px;
+
+  img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 .my-github {
   color: #00f;

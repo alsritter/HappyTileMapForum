@@ -26,9 +26,9 @@ function loginByEmail(email, code) {
 }
 
 // 每次加载页面，获取用户登录态
-function getUser() {
+function getUser(token) {
   request({
-    url: 'forum/user/getuser'
+    url: `forum/user/getuser?token=${token}`
   }).then((res) => {
     this.$store.commit('setUser', res.data)
   })

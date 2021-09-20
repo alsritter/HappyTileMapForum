@@ -104,6 +104,7 @@ export default {
           }
         })
         .catch((error) => {
+          console.error(error);
           this.$message({
             showClose: true,
             message: '服务器繁忙，请稍后再试',
@@ -162,6 +163,7 @@ export default {
 }
 .submit {
   @include basic-button;
+  height: 30px;
   margin: 10px auto 0 auto;
 }
 </style>

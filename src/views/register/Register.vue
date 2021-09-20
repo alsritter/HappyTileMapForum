@@ -176,8 +176,6 @@
 <script>
 import BasicPanel from '@components/common/panel/BasicPanel'
 import Register from '@network/register'
-import GoodInput from '@components/common/GoodInput'
-import Captcha from '@components/common/Captcha'
 
 // // 定义防抖函数
 // function debounce(fn, delay = 300) {
@@ -219,7 +217,7 @@ export default {
                 callback()
               }
             })
-            .catch((error) => {
+            .catch(() => {
               callback()
             })
         }
@@ -237,7 +235,7 @@ export default {
                 callback()
               }
             })
-            .catch((error) => {
+            .catch(() => {
               callback()
             })
         }
@@ -245,9 +243,7 @@ export default {
     }
   },
   components: {
-    BasicPanel,
-    GoodInput,
-    Captcha
+    BasicPanel
   },
   methods: {
     getVerifyCode() {

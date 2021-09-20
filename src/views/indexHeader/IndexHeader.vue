@@ -120,7 +120,7 @@
     transition: all 1s;
   }
   // 定义背景颜色
-  $bgc: #42B983;
+  $bgc: #e2dbc3;
   
   .index-header{
     width: 100%;
@@ -142,10 +142,10 @@
   .logo{
     float: left;
     height: 50px;
-    width: 150px;
+    width: 50px;
     cursor: pointer;
-    background: url('~@assets/img/raspberry_logo.png') no-repeat center center;
-    background-size: 150px;
+    background: url('~@assets/img/svg/logo.svg') no-repeat center center;
+    background-size: 30px;
   }
   
   .search-box{
@@ -195,7 +195,7 @@
     .logo{
       width: 50px;
       height: 50px;
-      background: url('~@assets/img/small-logo1.png') no-repeat center center;
+      background: url('~@assets/img/svg/logo.svg') no-repeat center center;
       background-size: 40px;
     }
     // 导航栏

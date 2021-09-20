@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Loading, Message } from 'element-ui'
 import Vue from 'vue'
-import qs from 'qs' // 用来发送表单请求
+// import qs from 'qs' // 用来发送表单请求
 
 const baseURL = 'http://localhost:19999/'
 let loadingInstance //loading 实例
@@ -62,7 +62,7 @@ export function request(options) {
         Vue.prototype.$closeLoading()
         // 请求错误时
         console.error('请求失败', err)
-        return Promise.reject(error) // 在调用的那边可以拿到(catch)你想返回的错误信息
+        return Promise.reject(err) // 在调用的那边可以拿到(catch)你想返回的错误信息
       }
     )
 
@@ -121,7 +121,7 @@ export function request(options) {
           }
         }
 
-        return Promise.reject(error)
+        return Promise.reject(err)
       }
     )
 

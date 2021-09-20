@@ -1,23 +1,21 @@
 <template>
   <div class="index-footer">
-    © 2019 Alsritter
+    © 2021 Alsritter
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'index-footer',
-    data() {
-      return {
-        
-      }
-    }
+export default {
+  name: 'index-footer',
+  data() {
+    return {}
   }
+}
 </script>
 
 <style scoped>
-  .index-footer{
-    clear: both;
-    text-align: center;
-  }
+.index-footer {
+  clear: both;
+  text-align: center;
+}
 </style>

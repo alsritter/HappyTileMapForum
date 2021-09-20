@@ -142,7 +142,6 @@
 
 <script>
 import BasicPanel from '@components/common/panel/BasicPanel'
-import GoodInput from '@components/common/GoodInput'
 import Captcha from '@components/common/Captcha'
 
 export default {
@@ -168,7 +167,6 @@ export default {
   },
   components: {
     BasicPanel,
-    GoodInput,
     Captcha
   },
   methods: {
@@ -184,7 +182,9 @@ export default {
         type: 'success',
         duration: 800,
         onClose: () => {
-          this.$axios.login.getUser.call(this)
+          // 在 javascript 中，call 和 apply 都是为了改变某个函数运行时的上下文（context）而存在的，换句话说，就是为了改变函数体内部 this 的指向。
+          // 在这里没啥用，单纯就是试试而已
+          this.$axios.login.getUser.call(this, res.access_token)
           this.$router.push('/')
         }
       })

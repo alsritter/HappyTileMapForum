@@ -37,7 +37,8 @@ export default {
   mounted() {
     // 获取登录信息
     // 每次刷新页面，都向服务器请求登录
-    this.$axios.login.getUser.call(this)
+    const token = localStorage.getItem('access_token').replace('Bearer ', '')
+    this.$axios.login.getUser.call(this, token)
   },
   methods: {
     /**
