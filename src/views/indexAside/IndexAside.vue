@@ -69,7 +69,7 @@
         >游戏地图在线编辑器</template
       >
       <template>
-        <a href="https://alsritter.gitee.io/map-editor-online/" target="_blank">
+        <a href="https://alsritter.github.io/Genergaming/#/" target="_blank">
           <div class="logo">
             <img src="~@assets/img/svg/logo-edit.svg" alt="Node.js社区" />
           </div>
